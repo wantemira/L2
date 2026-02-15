@@ -1,0 +1,17 @@
+version: "2"
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters:
+  disable-all: true
+  enable:
+    - errcheck      # Проверяет необработанные ошибки
+    - govet         # Стандартный анализатор go vet
+    - staticcheck   # Статический анализатор (включает часть gosimple)
+    - revive        # Замена старого golint
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
