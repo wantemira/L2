@@ -93,7 +93,12 @@ func readLines() ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		defer file.Close()
+		defer func() {
+			if err := file.Close(); err != nil {
+				fmt.Printf("readLines: error with closing file: %v", err)
+				return
+			}
+		}()
 		scanner = bufio.NewScanner(file)
 	} else {
 		scanner = bufio.NewScanner(os.Stdin)
