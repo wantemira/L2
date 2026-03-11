@@ -1,0 +1,20 @@
+INFO Starting server
+INFO Loading configuration
+WARNING Disk space is low
+ERROR Failed to connect to database
+INFO Retrying connection
+INFO Connection established
+DEBUG Cache warmed up
+ERROR Timeout while reading response
+INFO User login: admin
+WARNING High memory usage detected
+INFO User logout: admin
+ERROR File not found
+DEBUG Background job started
+INFO Background job finished
+WARNING CPU temperature high
+ERROR Disk read failure
+INFO Shutting down services
+INFO Server stopped
+DEBUG Cleanup completed
+ERROR Failed to restart service
