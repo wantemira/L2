@@ -10,11 +10,11 @@ func (r *Repository) Create(event *models.Event) (*models.Event, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.repo[event.ID]; exists {
+	if _, exists := r.events[event.ID]; exists {
 		return nil, fmt.Errorf("event already exists")
 	}
 
-	r.repo[event.ID] = *event
+	r.events[event.ID] = *event
 
 	r.userEvents[event.UserID] = append(r.userEvents[event.UserID], event.ID)
 
@@ -25,11 +25,11 @@ func (r *Repository) Update(event *models.Event) (*models.Event, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	if _, exists := r.repo[event.ID]; !exists {
+	if _, exists := r.events[event.ID]; !exists {
 		return nil, fmt.Errorf("event not found")
 	}
 
-	r.repo[event.ID] = *event
+	r.events[event.ID] = *event
 
 	return event, nil
 }
@@ -38,12 +38,12 @@ func (r *Repository) Delete(eventId uint) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	event, exists := r.repo[eventId]
+	event, exists := r.events[eventId]
 	if !exists {
 		return fmt.Errorf("event not found")
 	}
 
-	delete(r.repo, eventId)
+	delete(r.events, eventId)
 
 	userEvents := r.userEvents[event.UserID]
 	for i, id := range r.userEvents[event.UserID] {
@@ -68,7 +68,7 @@ func (r *Repository) GetForDay(userID uint, date time.Time) ([]models.Event, err
 	}
 
 	for _, id := range eventIDs {
-		event := r.repo[id]
+		event := r.events[id]
 		if isDay(event.Date, date) {
 			result = append(result, event)
 		}
@@ -91,7 +91,7 @@ func (r *Repository) GetForWeek(userID uint, date time.Time) ([]models.Event, er
 	startWeek, endWeek := getRangeOfWeek(date)
 
 	for _, id := range eventIDs {
-		event := r.repo[id]
+		event := r.events[id]
 		if (event.Date.Equal(startWeek) || event.Date.After(startWeek)) && event.Date.Before(endWeek) {
 			result = append(result, event)
 		}
@@ -112,7 +112,7 @@ func (r *Repository) GetForMonth(userID uint, date time.Time) ([]models.Event, e
 	}
 
 	for _, id := range eventIDs {
-		event := r.repo[id]
+		event := r.events[id]
 		if isInMonth(event.Date, date) && event.Date.AddDate(0, 0, 1).Compare(date) > 0 {
 			result = append(result, event)
 		}

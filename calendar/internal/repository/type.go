@@ -7,7 +7,7 @@ import (
 )
 
 type Repository struct {
-	repo       map[uint]models.Event
+	events     map[uint]models.Event
 	userEvents map[uint][]uint
 	logger     *log.Logger
 	mu         sync.RWMutex
@@ -15,7 +15,7 @@ type Repository struct {
 
 func New(logger *log.Logger) *Repository {
 	return &Repository{
-		repo:       make(map[uint]models.Event),
+		events:     make(map[uint]models.Event),
 		userEvents: make(map[uint][]uint),
 		logger:     logger,
 	}
