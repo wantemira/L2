@@ -2,15 +2,16 @@ package controller
 
 import (
 	"calendar/internal/usecase"
-	"log"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Handler struct {
 	service *usecase.Service
-	logger  *log.Logger
+	logger  *logrus.Logger
 }
 
-func New(service *usecase.Service, logger *log.Logger) *Handler {
+func New(service *usecase.Service, logger *logrus.Logger) *Handler {
 	return &Handler{
 		service: service,
 		logger:  logger,
