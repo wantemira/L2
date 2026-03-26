@@ -2,18 +2,19 @@ package usecase
 
 import (
 	"calendar/internal/repository"
-	"log"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Service struct {
 	repo   *repository.Repository
-	logger *log.Logger
+	logger *logrus.Logger
 	nextID uint
 	mu     sync.RWMutex
 }
 
-func New(repo *repository.Repository, logger *log.Logger) *Service {
+func New(repo *repository.Repository, logger *logrus.Logger) *Service {
 	return &Service{
 		repo:   repo,
 		logger: logger,
