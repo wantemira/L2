@@ -3,6 +3,7 @@ package controller
 import (
 	"calendar/pkg/models"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -12,16 +13,17 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var req models.EventRequest
+	var req models.EventCreateRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
+		fmt.Println(err)
 		writeError(w, "bad request", http.StatusBadRequest)
 		return
 	}
 
 	event, err := h.service.Create(&req)
 	if err != nil {
-		writeError(w, err.Error(), http.StatusServiceUnavailable)
+		writeError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -32,7 +34,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodPost) {
 		return
 	}
-	var req models.Event
+	var req models.EventUpdateRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		writeError(w, "bad request", http.StatusBadRequest)
@@ -41,7 +43,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	event, err := h.service.Update(&req)
 	if err != nil {
-		writeError(w, err.Error(), http.StatusServiceUnavailable)
+		writeError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
