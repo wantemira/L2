@@ -9,8 +9,14 @@ type Event struct {
 	Date   time.Time
 }
 
-type EventRequest struct {
-	UserID uint      `json:"user_id"`
-	Date   time.Time `json:"date"`
-	Title  string    `json:"title"`
+type EventCreateRequest struct {
+	UserID uint   `json:"user_id"`
+	Date   string `json:"date"`
+	Title  string `json:"title"`
+}
+type EventUpdateRequest struct {
+	ID     uint   `json:"id"`
+	UserID uint   `json:"user_id"`
+	Date   string `json:"date"`
+	Title  string `json:"title"`
 }
