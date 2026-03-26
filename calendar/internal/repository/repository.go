@@ -46,7 +46,7 @@ func (r *Repository) Delete(eventId uint) error {
 	delete(r.events, eventId)
 
 	userEvents := r.userEvents[event.UserID]
-	for i, id := range r.userEvents[event.UserID] {
+	for i, id := range userEvents {
 		if id == eventId {
 			r.userEvents[event.UserID] = append(userEvents[:i], userEvents[i+1:]...)
 			break
@@ -57,11 +57,10 @@ func (r *Repository) Delete(eventId uint) error {
 }
 
 func (r *Repository) GetForDay(userID uint, date time.Time) ([]models.Event, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
-	var result []models.Event
-
+	result := make([]models.Event, 0)
 	eventIDs, exists := r.userEvents[userID]
 	if !exists {
 		return nil, fmt.Errorf("user not found")
@@ -78,10 +77,10 @@ func (r *Repository) GetForDay(userID uint, date time.Time) ([]models.Event, err
 }
 
 func (r *Repository) GetForWeek(userID uint, date time.Time) ([]models.Event, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
-	var result []models.Event
+	result := make([]models.Event, 0)
 
 	eventIDs, exists := r.userEvents[userID]
 	if !exists {
@@ -101,10 +100,10 @@ func (r *Repository) GetForWeek(userID uint, date time.Time) ([]models.Event, er
 }
 
 func (r *Repository) GetForMonth(userID uint, date time.Time) ([]models.Event, error) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 
-	var result []models.Event
+	result := make([]models.Event, 0)
 
 	eventIDs, exists := r.userEvents[userID]
 	if !exists {
