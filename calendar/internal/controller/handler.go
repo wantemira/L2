@@ -3,11 +3,12 @@ package controller
 import (
 	"calendar/pkg/models"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
+// Create обрабатывает POST-запрос на создание нового события
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodPost) {
 		return
@@ -16,20 +17,24 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	var req models.EventCreateRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		fmt.Println(err)
 		writeError(w, "bad request", http.StatusBadRequest)
 		return
 	}
 
 	event, err := h.service.Create(&req)
 	if err != nil {
-		writeError(w, err.Error(), http.StatusBadRequest)
+		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "already exists") {
+			writeError(w, err.Error(), http.StatusServiceUnavailable)
+		} else {
+			writeError(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 
 	writeJSON(w, event)
 }
 
+// Update обрабатывает POST-запрос на обновление существующего события
 func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodPost) {
 		return
@@ -43,13 +48,18 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	event, err := h.service.Update(&req)
 	if err != nil {
-		writeError(w, err.Error(), http.StatusBadRequest)
+		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "already exists") {
+			writeError(w, err.Error(), http.StatusServiceUnavailable)
+		} else {
+			writeError(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 
 	writeJSON(w, event)
 }
 
+// Delete обрабатывает POST-запрос на удаление события по event_id
 func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodPost) {
 		return
@@ -71,6 +81,7 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, "event deleted")
 }
 
+// GetForDay обрабатывает GET-запрос на получение событий за день
 func (h *Handler) GetForDay(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodGet) {
 		return
@@ -96,6 +107,7 @@ func (h *Handler) GetForDay(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, events)
 }
 
+// GetForWeek обрабатывает GET-запрос на получение событий за неделю
 func (h *Handler) GetForWeek(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodGet) {
 		return
@@ -121,6 +133,7 @@ func (h *Handler) GetForWeek(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, events)
 }
 
+// GetForMonth обрабатывает GET-запрос на получение событий за месяц
 func (h *Handler) GetForMonth(w http.ResponseWriter, r *http.Request) {
 	if !checkMethod(w, r, http.MethodGet) {
 		return
