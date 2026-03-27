@@ -24,9 +24,9 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	event, err := h.service.Create(&req)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "already exists") {
-			writeError(w, err.Error(), http.StatusServiceUnavailable)
-		} else {
 			writeError(w, err.Error(), http.StatusBadRequest)
+		} else {
+			writeError(w, err.Error(), http.StatusServiceUnavailable)
 		}
 		return
 	}
@@ -49,9 +49,9 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	event, err := h.service.Update(&req)
 	if err != nil {
 		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "already exists") {
-			writeError(w, err.Error(), http.StatusServiceUnavailable)
-		} else {
 			writeError(w, err.Error(), http.StatusBadRequest)
+		} else {
+			writeError(w, err.Error(), http.StatusServiceUnavailable)
 		}
 		return
 	}
@@ -74,7 +74,11 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	err = h.service.Delete(uint(id))
 	if err != nil {
-		writeError(w, err.Error(), http.StatusServiceUnavailable)
+		if strings.Contains(err.Error(), "not found") || strings.Contains(err.Error(), "already exists") {
+			writeError(w, err.Error(), http.StatusBadRequest)
+		} else {
+			writeError(w, err.Error(), http.StatusServiceUnavailable)
+		}
 		return
 	}
 
