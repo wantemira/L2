@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+// Create добавляет новое событие в репозиторий
+// Возвращает ошибку, если событие с таким ID уже существует
 func (r *Repository) Create(event *models.Event) (*models.Event, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -21,6 +23,8 @@ func (r *Repository) Create(event *models.Event) (*models.Event, error) {
 	return event, nil
 }
 
+// Update обновляет существующее событие по его ID
+// Возвращает ошибку, если событие не найдено
 func (r *Repository) Update(event *models.Event) (*models.Event, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -34,6 +38,8 @@ func (r *Repository) Update(event *models.Event) (*models.Event, error) {
 	return event, nil
 }
 
+// Delete удаляет событие по его ID
+// Возвращает ошибку, если событие не найдено
 func (r *Repository) Delete(eventId uint) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -56,6 +62,7 @@ func (r *Repository) Delete(eventId uint) error {
 	return nil
 }
 
+// GetForDay возвращает все события пользователя за указанный день
 func (r *Repository) GetForDay(userID uint, date time.Time) ([]models.Event, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
@@ -76,6 +83,7 @@ func (r *Repository) GetForDay(userID uint, date time.Time) ([]models.Event, err
 	return result, nil
 }
 
+// GetForWeek возвращает все события пользователя за неделю, содержащую указанную дату
 func (r *Repository) GetForWeek(userID uint, date time.Time) ([]models.Event, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
@@ -99,6 +107,7 @@ func (r *Repository) GetForWeek(userID uint, date time.Time) ([]models.Event, er
 	return result, nil
 }
 
+// GetForMonth возвращает все события пользователя за месяц, содержащий указанную дату
 func (r *Repository) GetForMonth(userID uint, date time.Time) ([]models.Event, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()

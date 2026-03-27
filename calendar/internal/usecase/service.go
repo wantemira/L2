@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// EventErrorCheck выполняет валидацию полей события
 func EventErrorCheck(event *models.Event) error {
 	if event.ID <= 0 {
 		return fmt.Errorf("invalid event id")
@@ -20,6 +21,7 @@ func EventErrorCheck(event *models.Event) error {
 	return nil
 }
 
+// Create создаёт новое событие с валидацией входных данных
 func (s *Service) Create(eventReq *models.EventCreateRequest) (*models.Event, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -43,6 +45,7 @@ func (s *Service) Create(eventReq *models.EventCreateRequest) (*models.Event, er
 	return s.repo.Create(event)
 }
 
+// Update обновляет существующее событие по его ID
 func (s *Service) Update(eventReq *models.EventUpdateRequest) (*models.Event, error) {
 	date, err := time.Parse("2006-01-02", eventReq.Date)
 	if err != nil {
@@ -60,6 +63,8 @@ func (s *Service) Update(eventReq *models.EventUpdateRequest) (*models.Event, er
 	}
 	return s.repo.Update(event)
 }
+
+// Delete удаляет событие по его ID
 func (s *Service) Delete(eventId uint) error {
 	if eventId <= 0 {
 		return fmt.Errorf("invalid event id")
@@ -67,6 +72,7 @@ func (s *Service) Delete(eventId uint) error {
 	return s.repo.Delete(eventId)
 }
 
+// GetForDay возвращает события пользователя за указанный день
 func (s *Service) GetForDay(userID uint, date time.Time) ([]models.Event, error) {
 	if userID <= 0 {
 		return nil, fmt.Errorf("invalid user_id")
@@ -74,6 +80,7 @@ func (s *Service) GetForDay(userID uint, date time.Time) ([]models.Event, error)
 	return s.repo.GetForDay(userID, date)
 }
 
+// GetForWeek возвращает события пользователя за неделю указанной даты
 func (s *Service) GetForWeek(userID uint, date time.Time) ([]models.Event, error) {
 	if userID <= 0 {
 		return nil, fmt.Errorf("invalid user_id")
@@ -81,6 +88,7 @@ func (s *Service) GetForWeek(userID uint, date time.Time) ([]models.Event, error
 	return s.repo.GetForWeek(userID, date)
 }
 
+// GetForMonth возвращает события пользователя за месяц указанной даты
 func (s *Service) GetForMonth(userID uint, date time.Time) ([]models.Event, error) {
 	if userID <= 0 {
 		return nil, fmt.Errorf("invalid user_id")

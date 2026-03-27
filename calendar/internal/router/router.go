@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// Run запускает HTTP-сервер на порту из конфигурации
 func (s *Server) Run() {
 	cfg := config.Get()
 	loggedMux := s.Init()
@@ -18,6 +19,7 @@ func (s *Server) Run() {
 	}
 }
 
+// Init инициализирует зависимости, регистрирует маршруты и возвращает http.Handler с middleware
 func (s *Server) Init() http.Handler {
 
 	repo := repository.New(s.logger)

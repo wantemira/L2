@@ -1,3 +1,4 @@
+// Package main является точкой входа в приложение календаря.
 package main
 
 import (
